@@ -1,0 +1,47 @@
+# Uptime Kuma — деплой С Caddy (авто-HTTPS)
+#
+# 1. Скопируй Caddyfile.example → Caddyfile
+# 2. Укажи свой домен в Caddyfile
+# 3. Запуск:
+#      docker compose -f docker/docker-compose.caddy.yml up -d
+#
+# Доступ: https://your-domain.example.com
+
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - kuma-network
+
+  uptime-kuma:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - kuma_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - kuma-network
+    environment:
+      - UPTIME_KUMA_PORT=3001
+
+volumes:
+  kuma_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  kuma-network:
+    driver: bridge

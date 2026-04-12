@@ -1,0 +1,10 @@
+# Скопируй этот файл в Caddyfile и укажи свой домен:
+#   cp Caddyfile.example Caddyfile
+#
+# Примеры домена:
+#   94.231.221.90.sslip.io       — автоматический HTTPS без покупки домена
+#   monitor.example.com           — свой домен
+
+your-domain.example.com {
+    reverse_proxy uptime-kuma:3001
+}
