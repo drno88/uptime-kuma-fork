@@ -70,14 +70,44 @@
 </template>
 
 <script>
+const CYRILLIC_MAP = {
+    а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "zh",
+    з: "z", и: "i", й: "j", к: "k", л: "l", м: "m", н: "n", о: "o",
+    п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts",
+    ч: "ch", ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu",
+    я: "ya",
+};
+
+function toSlug(str) {
+    return str
+        .toLowerCase()
+        .split("")
+        .map((c) => CYRILLIC_MAP[c] ?? c)
+        .join("")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .replace(/-{2,}/g, "-");
+}
+
 export default {
     components: {},
     data() {
         return {
             title: "",
             slug: "",
+            slugEdited: false,
             processing: false,
         };
+    },
+    watch: {
+        title(val) {
+            if (!this.slugEdited) {
+                this.slug = toSlug(val);
+            }
+        },
+        slug() {
+            this.slugEdited = this.slug !== toSlug(this.title);
+        },
     },
     methods: {
         /**
