@@ -32,6 +32,9 @@
                                 required
                                 data-testid="slug-input"
                             />
+                            <button type="button" class="btn btn-outline-secondary" :title="$t('Regenerate')" @click="slug = randomSlug()">
+                                <font-awesome-icon icon="rotate" />
+                            </button>
                         </div>
                         <div class="form-text">
                             <ul>
@@ -70,23 +73,11 @@
 </template>
 
 <script>
-const CYRILLIC_MAP = {
-    а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "zh",
-    з: "z", и: "i", й: "j", к: "k", л: "l", м: "m", н: "n", о: "o",
-    п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts",
-    ч: "ch", ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu",
-    я: "ya",
-};
+const SLUG_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-function toSlug(str) {
-    return str
-        .toLowerCase()
-        .split("")
-        .map((c) => CYRILLIC_MAP[c] ?? c)
-        .join("")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-        .replace(/-{2,}/g, "-");
+function randomSlug() {
+    const len = 8 + Math.floor(Math.random() * 9); // 8–16
+    return Array.from({ length: len }, () => SLUG_CHARS[Math.floor(Math.random() * SLUG_CHARS.length)]).join("");
 }
 
 export default {
@@ -94,22 +85,12 @@ export default {
     data() {
         return {
             title: "",
-            slug: "",
-            slugEdited: false,
+            slug: randomSlug(),
             processing: false,
         };
     },
-    watch: {
-        title(val) {
-            if (!this.slugEdited) {
-                this.slug = toSlug(val);
-            }
-        },
-        slug() {
-            this.slugEdited = this.slug !== toSlug(this.title);
-        },
-    },
     methods: {
+        randomSlug,
         /**
          * Submit form data to add new status page
          * @returns {Promise<void>}
