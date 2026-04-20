@@ -1051,8 +1051,8 @@ export default {
                 const spToken = sessionStorage.getItem("statusPageToken_" + this.slug);
 
                 if (visibility !== "public" && !spToken) {
-                    if (visibility === "private") {
-                        // Already logged in — reuse the user's JWT token
+                    if (visibility === "private" || visibility === "password") {
+                        // Already logged in — reuse the user's JWT token (admins bypass status-page password)
                         const userToken = localStorage.token || sessionStorage.token;
                         if (userToken && userToken !== "autoLogin") {
                             sessionStorage.setItem("statusPageToken_" + this.slug, userToken);

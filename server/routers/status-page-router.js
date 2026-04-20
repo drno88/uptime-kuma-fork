@@ -46,6 +46,11 @@ async function checkStatusPageAuth(req, res, next) {
             if (decoded.statusPageSlug === slug && decoded.type === "statusPage") {
                 return next();
             }
+            // Logged-in users (admins) bypass the status-page password
+            if (decoded.id) {
+                const user = await R.findOne("user", " id = ? ", [decoded.id]);
+                if (user) return next();
+            }
         } else if (visibility === "private") {
             if (decoded.id) {
                 const user = await R.findOne("user", " id = ? ", [decoded.id]);
