@@ -617,36 +617,36 @@
         <component is="style" v-if="config.customCSS" type="text/css">
             {{ config.customCSS }}
         </component>
+    </div>
 
-        <!-- Auth Gate Overlay -->
-        <div v-if="authRequired" class="auth-overlay">
-            <div class="auth-modal card shadow">
-                <div class="card-body p-4">
-                    <h4 class="mb-3">
-                        <font-awesome-icon icon="lock" class="me-2" />
-                        {{ pageVisibility === "private" ? $t("Login") : $t("Password protected") }}
-                    </h4>
-                    <div v-if="authError" class="alert alert-danger py-2">{{ authError }}</div>
-                    <div v-if="pageVisibility === 'private'" class="mb-3">
-                        <input
-                            v-model="authUsername"
-                            type="text"
-                            class="form-control mb-2"
-                            :placeholder="$t('Username')"
-                            @keyup.enter="submitAuth"
-                        />
-                    </div>
+    <!-- Auth Gate Overlay — outside loadedTheme guard so it renders even before page data is loaded -->
+    <div v-if="authRequired" class="auth-overlay">
+        <div class="auth-modal card shadow">
+            <div class="card-body p-4">
+                <h4 class="mb-3">
+                    <font-awesome-icon icon="lock" class="me-2" />
+                    {{ pageVisibility === "private" ? $t("Login") : $t("Password protected") }}
+                </h4>
+                <div v-if="authError" class="alert alert-danger py-2">{{ authError }}</div>
+                <div v-if="pageVisibility === 'private'" class="mb-3">
                     <input
-                        v-model="authPassword"
-                        type="password"
-                        class="form-control mb-3"
-                        :placeholder="$t('Password')"
+                        v-model="authUsername"
+                        type="text"
+                        class="form-control mb-2"
+                        :placeholder="$t('Username')"
                         @keyup.enter="submitAuth"
                     />
-                    <button class="btn btn-primary w-100" @click="submitAuth">
-                        {{ pageVisibility === "private" ? $t("Login") : $t("Enter") }}
-                    </button>
                 </div>
+                <input
+                    v-model="authPassword"
+                    type="password"
+                    class="form-control mb-3"
+                    :placeholder="$t('Password')"
+                    @keyup.enter="submitAuth"
+                />
+                <button class="btn btn-primary w-100" @click="submitAuth">
+                    {{ pageVisibility === "private" ? $t("Login") : $t("Enter") }}
+                </button>
             </div>
         </div>
     </div>
